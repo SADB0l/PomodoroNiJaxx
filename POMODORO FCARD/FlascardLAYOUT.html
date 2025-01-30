@@ -124,18 +124,19 @@
 		
 		.buttcontainer {
 		    display: flex;
-		    flex-direction: column; /* Stack buttons vertically */
-		    gap: 10px; /* Space between buttons */
+		    max-width: 1000px;
+		    margin: 0 auto;
+		    padding: 20px;
+		    gap: 50px;
 		}
 
 		.buttcontainersmall {
-		    position: fixed;
-		    bottom: 20px; /* Adjust the spacing from the bottom */
-		    left: 20px; /* Adjust the spacing from the left */
+		    position: absolute;
+		    top: 0;
+		    left: 0;
 		    display: flex;
 		    flex-direction: column; /* Stack buttons vertically */
 		    gap: 10px; /* Space between buttons */
-		    z-index: 1000; /* Ensure it stays on top of other elements */
 		}
 
 		.controls-container {
@@ -185,20 +186,19 @@
     </style>
 <body>
 	<h2>Create Your Flashcards</h2>
-<div class="controls-container">
-	<div class="buttcontainersmall">
-		<button class="edit-btn" onclick="editCard()">Edit</button>
-		<button class="delete-btn" onclick="deleteCard()">Delete</button>
-	</div>
+	
 	<div class="buttcontainer">
         	<button class="delete-all-btn" id="deleteAllBtn">Delete All</button>
 		<button class="shuff-btn" onclick="shuffCard()">Shuffle</button>
         	<button class="save-btn" onclick="saveCard()">Save</button>	
-	</div>	
-</div>	
+	</div>		
 		
 		
 	<div class="container">
+	     <div class="buttcontainersmall">
+		<button class="edit-btn" onclick="editCard()">Edit</button>
+		<button class="delete-btn" onclick="deleteCard()">Delete</button>
+	     </div>
     <div class="flashcard-container" id="flashcardsList">
 		<button class="btn" onclick="openadd()"><img src="AddFlashcard.png"></button>
 	</div>
