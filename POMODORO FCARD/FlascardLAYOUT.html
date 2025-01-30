@@ -134,7 +134,7 @@
 
 	.buttcontainersmall {
 			display: flex;
-	            	max-width: 1000px;
+	            	max-width: 100px;
 	           	margin: 0 auto;
 	            	padding: 20px;
 			gap: 50px;
@@ -181,11 +181,11 @@
     </style>
 <body>
 	<h2>Create Your Flashcards</h2>
-	<div class="buttcontainer">
+	<div class="buttcontainersmall">
 		<button class="edit-btn" onclick="editCard()">Edit</button>
 		<button class="delete-btn" onclick="deleteCard()">Delete</button>
 	</div>
-	<div class="buttcontainersmall">
+	<div class="buttcontainer">
         	<button class="delete-all-btn" id="deleteAllBtn">Delete All</button>
 		<button class="shuff-btn" onclick="shuffCard()">Shuffle</button>
         	<button class="save-btn" onclick="saveCard()">Save</button>	
