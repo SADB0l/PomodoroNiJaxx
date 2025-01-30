@@ -23,7 +23,7 @@
         .container {
             display: flex;
 			min-height: 200px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background-color: #fff;
             padding: 20px;
@@ -160,8 +160,8 @@
 
 		.buttcontainersmall {
 		    position: absolute;
-			top: 150;
-		    left: 180;
+			top: 80;
+		    left: 90;
 		    display: flex;
 		    flex-direction: row; /* Stack buttons vertically */
 		    gap: 10px; /* Space between buttons */
@@ -226,6 +226,7 @@
 			top: 100;
 		    left: 180;
 		}
+		
 
 		.controls-container {
 		    display: flex;
@@ -283,32 +284,62 @@
 			animation: shuffleAnimation 0.3s ease-in-out;
 		}
 
+		/* ADD FILE */
+		.upload {
+		    position: absolute;
+			top: 135;
+		    left: 90;
+		    display: flex;
+		    flex-direction: row; /* Stack buttons vertically */
+		    gap: 10px; /* Space between buttons */
+			margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			height: 25px;
+		}
+		
+		.dl {
+			background-color: #fff;
+			color: #202020;
+			font-size: 15px;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			width: 100px;  
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+		}
 
     </style>
 <body>
 	<h2>Create Your Flashcards</h2>
 	
 	<div class="buttcontainer">
-        	<button class="delete-all-btn" id="deleteAllBtn">Delete All</button>
+        <button class="delete-all-btn" id="deleteAllBtn">Delete All</button>
 		<button class="shuff-btn" onclick="shuffCard()">Shuffle</button>
-        	<button class="save-btn" onclick="saveCard()">Save</button>	
+		<button class="save-btn" onclick="downloadFlashcards()">Save</button>
 	</div>		
-		
-		
+	<div class="upload">
+		<input type="file" id="uploadFile" />
+		<button class="dl" onclick="uploadFlashcards()">Upload</button>
+	</div>
+
 	<div class="container">
 	     <div class="buttcontainersmall">
-	<div class="checkbx">
-		<label for="resetFlipToggle">Flip on shuffle</label>
-		<input type="checkbox" id="resetFlipToggle">
-	</div>
-		<button class="edit-btn" onclick="editCard()">Edit</button>
-		<button class="delete-btn" onclick="deleteCard()">Delete</button>
-	     </div>
+			<div class="checkbx">
+				<label for="resetFlipToggle">Flip on shuffle</label>
+				<input type="checkbox" id="resetFlipToggle">
+			</div>
+				<button class="edit-btn" onclick="editCard()">Edit</button>
+				<button class="delete-btn" onclick="deleteCard()">Delete</button>
+	    </div>
     <div class="flashcard-container" id="flashcardsList">
 		<button class="btn" onclick="openadd()"><img src="AddFlashcard.png"></button>
 	</div>
-
-		
 			
 
         <div id="actionButtons" style="margin-top: 20px;">
@@ -440,6 +471,9 @@ function shuffCard() {
             setTimeout(() => card.classList.remove("flip"), 150); // Delay flip reset slightly
         }
 
+        // Remove the 'active-card' class to hide the red circle
+        card.classList.remove("active-card");
+
         setTimeout(() => card.classList.remove("shuffle"), 300); // Remove animation after playing
     });
 
@@ -452,7 +486,60 @@ function shuffCard() {
     }, 300); // Delay shuffling until animation finishes
 }
 
+// Download flashcard
+function downloadFlashcards() {
+    const flashcards = [];
+    document.querySelectorAll(".flashcard").forEach(card => {
+        const frontText = card.querySelector(".front").textContent.replace("Q: ", "");
+        const backText = card.querySelector(".back").textContent.replace("A: ", "");
+        flashcards.push({ frontText, backText });
+    });
 
+    // Create a Blob with the flashcard data and make it downloadable
+    const blob = new Blob([JSON.stringify(flashcards)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "flashcards.json"; // Set the filename for the download
+    link.click();
+}
+
+// Function to upload flashcards from a file
+function uploadFlashcards() {
+    const fileInput = document.getElementById("uploadFile");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select a file to upload.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const flashcards = JSON.parse(event.target.result);
+        const flashcardsList = document.getElementById("flashcardsList");
+        
+        flashcards.forEach(flashcard => {
+            const card = document.createElement("div");
+            card.className = "flashcard";
+            card.innerHTML = `
+                <div class="card-inner">
+                    <div class="front">Q: ${flashcard.frontText}</div>
+                    <div class="back">A: ${flashcard.backText}</div>
+                </div>`;
+
+            card.addEventListener('click', function () {
+                document.querySelectorAll('.flashcard').forEach(c => c.classList.remove('active-card'));
+                card.classList.add('active-card');
+                card.classList.toggle('flip');
+                selectedCard = card;
+            });
+
+            flashcardsList.appendChild(card);
+        });
+    };
+
+    reader.readAsText(file);
+}
 
 </script>
 
