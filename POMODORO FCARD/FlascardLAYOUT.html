@@ -132,13 +132,14 @@
 			gap: 50px;
 		}
 
-	.buttcontainersmall {
-			display: flex;
-			align-items: left;
-	            	max-width: 200px;
-	           	margin: 0 auto;
-	            	padding: 20px;
-			gap: 50px;
+		.buttcontainersmall {
+		    position: fixed;
+		    bottom: 20px; /* Adjust the spacing from the bottom */
+		    left: 20px; /* Adjust the spacing from the left */
+		    display: flex;
+		    flex-direction: column; /* Stack buttons vertically */
+		    gap: 10px; /* Space between buttons */
+		    z-index: 1000; /* Ensure it stays on top of other elements */
 		}
 	
 		.edit-btn, .delete-btn {
