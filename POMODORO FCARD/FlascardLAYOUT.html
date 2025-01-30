@@ -1,0 +1,250 @@
+<html>
+<center>
+<style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+            width: 100%;
+        }
+
+		.flashcard-container {
+			flex: 1;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 20px; /* Added spacing between flashcards */
+			justify-content: flex-start;
+			transition: opacity 0.5s ease;
+		}
+
+		.flashcard {
+			background-color: #fff;
+			padding: 15px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+			width: 250px;
+			height: 150px;
+			cursor: pointer;
+			position: relative;
+			perspective: 1000px;
+			transition: border 0.3s ease;
+		}
+
+        .flashcard.selected {
+            border: 2px solid #4CAF50;
+            box-shadow: 0 0 10px rgba(0, 128, 0, 0.3);
+        }
+
+        .flashcard:hover {
+            transform: scale(1.05);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flashcard.flip .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .front {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .back {
+            background-color: #4CAF50;
+            color: white;
+            transform: rotateY(180deg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+		
+		table, td, tr {
+			text-align: center;
+		}
+
+        .button-container, {
+            width: 200px;
+			height: 200px;
+        }
+
+        .btn {
+			background-color: #fff;
+			color: white;
+			outline: 2px solid black;
+			border-radius: 20px;
+			font-size: 48px;
+			font-weight: bold;
+			text-align: center;
+			border: none;
+			width: 250px;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+		}
+		
+		.btn img {
+			border-radius: 20px;
+			height: 180px; 
+		}
+
+		.btn:hover {
+			transform: scale(1.05);
+		}
+		
+		.buttcontainer {
+			display: flex;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+			gap: 50px;
+		}
+		
+		.delete-all-btn, .edit-btn, .delete-btn, .save-btn, .shuff-btn  {
+			background-color: #fff;
+			color: #202020;
+			font-size: 15px;
+			font-weight: bold;
+			text-align: center;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			width: 140px;  
+			height: 100px; 
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.delete-all-btn:hover, .edit-btn:hover, .delete-btn:hover, .save-btn:hover, .shuff-btn:hover {
+			transform: scale(1.10);
+		}
+
+    </style>
+<body>
+	<h2>Create Your Flashcards</h2>
+	<div class="buttcontainer">
+		<button class="delete-all-btn" id="deleteAllBtn">Delete All</button>
+		<button class="edit-btn" onclick="editCard()">Edit</button>
+        <button class="delete-btn" onclick="deleteCard()">Delete</button>
+        <button class="save-btn" onclick="saveCard()">Save</button>
+		<button class="shuff-btn" onclick="shuffCard()">Shuffle</button>
+	</div>	
+		
+		
+		
+	<div class="container">
+    <div class="flashcard-container" id="flashcardsList">
+		<button class="btn" onclick="openadd()"><img src="AddFlashcard.png"></button>
+	</div>
+
+		
+			
+
+        <div id="actionButtons" style="margin-top: 20px;">
+    </div>
+</div>
+</html>
+<script>
+    let modal;
+
+    function openadd() {
+        modal = document.createElement("div");
+        modal.style.position = "fixed";
+        modal.style.top = "0";
+        modal.style.left = "0";
+        modal.style.width = "100%";
+        modal.style.height = "100%";
+        modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        modal.style.display = "flex";
+        modal.style.justifyContent = "center";
+        modal.style.alignItems = "center";
+        modal.style.zIndex = "1000";
+
+        const iframe = document.createElement("iframe");
+        iframe.src = "openadd.html"; 
+        iframe.style.width = "400px";
+        iframe.style.height = "450px";
+        iframe.style.border = "none";
+        iframe.style.borderRadius = "10px";
+        iframe.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.2)";
+
+        modal.appendChild(iframe);
+        document.body.appendChild(modal);
+    }
+
+    window.addEventListener("message", function (event) {
+        if (event.data.type === "addFlashcard") {
+            addFlashcard(event.data.front, event.data.back);
+            closeAddModal();
+        } else if (event.data.type === "closeModal") {
+            closeAddModal();
+        }
+    });
+
+    function closeAddModal() {
+        if (modal) {
+            document.body.removeChild(modal);
+            modal = null;
+        }
+    }
+
+    function addFlashcard(frontText, backText) {
+        const flashcardsList = document.getElementById("flashcardsList");
+        const card = document.createElement("div");
+        card.className = "flashcard";
+        card.innerHTML = `
+            <div class="card-inner">
+                <div class="front">${frontText}</div>
+                <div class="back">${backText}</div>
+            </div>`;
+        
+        card.addEventListener('click', function () {
+            card.classList.toggle('flip');
+        });
+
+        flashcardsList.appendChild(card);
+    }
+</script>
+
+
