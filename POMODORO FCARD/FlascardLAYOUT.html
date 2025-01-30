@@ -123,13 +123,9 @@
 		}
 		
 		.buttcontainer {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-	            	max-width: 1000px;
-	           	margin: 0 auto;
-	            	padding: 20px;
-			gap: 50px;
+		    display: flex;
+		    flex-direction: column; /* Stack buttons vertically */
+		    gap: 10px; /* Space between buttons */
 		}
 
 		.buttcontainersmall {
@@ -140,6 +136,12 @@
 		    flex-direction: column; /* Stack buttons vertically */
 		    gap: 10px; /* Space between buttons */
 		    z-index: 1000; /* Ensure it stays on top of other elements */
+		}
+
+		.controls-container {
+		    display: flex;
+		    justify-content: space-between; /* Align buttcontainersmall to the left and buttcontainer to the right */
+		    margin-bottom: 20px; /* Space below the controls container */
 		}
 	
 		.edit-btn, .delete-btn {
@@ -183,6 +185,7 @@
     </style>
 <body>
 	<h2>Create Your Flashcards</h2>
+<div class="controls-container">
 	<div class="buttcontainersmall">
 		<button class="edit-btn" onclick="editCard()">Edit</button>
 		<button class="delete-btn" onclick="deleteCard()">Delete</button>
@@ -192,7 +195,7 @@
 		<button class="shuff-btn" onclick="shuffCard()">Shuffle</button>
         	<button class="save-btn" onclick="saveCard()">Save</button>	
 	</div>	
-		
+</div>	
 		
 		
 	<div class="container">
