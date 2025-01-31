@@ -1,3 +1,4 @@
+
 <html>
 <center>
 <style>
@@ -13,17 +14,55 @@
 			-ms-user-select: none;
         }
 		
-		/* Image dont drag */
 		img {
-			-webkit-user-drag: none; /* Chrome, Safari */
-			-moz-user-drag: none; /* Firefox */
-			user-drag: none; /* Standard */
+			-webkit-user-drag: none; 
+			-moz-user-drag: none; 
+			user-drag: none; 
+		}
+
+		.header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1000;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border-radius: 5px;
+			background-color: white;
+			padding: 15px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			width: 100%;
+			transition: transform 0.3s ease-in-out;
+		}
+
+		.hidden-header {
+			transform: translateY(-80%);
+		}
+
+		.toggle-btn {
+			background-color: #fff;
+			border: none;
+			cursor: pointer;
+			padding: 8px 15px;
+			border-radius: 5px;
+			transition: background 0.3s;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			width: 100px;
+			margin: 0 auto;
+			display: block;
+		}
+		
+		.cardcount {
+			position: absolute;
+			bottom: 20px;
+			left: 50px;
+			font-size: 12px;
+			font-weight: bold;
 		}
 
         .container {
             display: flex;
-			min-height: 200px;
-            max-width: 1400px;
             margin: 0 auto;
             background-color: #fff;
             padding: 20px;
@@ -38,24 +77,32 @@
         }
 
 		.flashcard-container {
-			flex: 1;
 			display: flex;
-			flex-wrap: wrap;
-			gap: 20px; /* Added spacing between flashcards */
+			flex-wrap: wrap;  
 			justify-content: flex-start;
-			transition: opacity 0.5s ease;
+			align-items: flex-start;
+			column-gap: 30px;
+			max-width: 1400px;
+			margin: 260px auto 20px auto;
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 		}
-		
+
 		.flashcard {
 			width: 250px;
-			height: 150px;
+			height: 140px; 
 			cursor: pointer;
 			position: relative;
-			perspective: 1000px; /* Ensures proper 3D effect */
+			perspective: 1000px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			flex-shrink: 0; 
+			row-gap: 5px;
 		}
+
 
         .flashcard:hover {
             transform: scale(1.05);
@@ -74,7 +121,8 @@
 		}
 
 		.front, .back {
-			width: 100%;
+			margin-top: 5px;
+			width: 90%;
 			height: 100%;
 			position: absolute;
 			top: 0;
@@ -88,7 +136,6 @@
 			box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 		}
 
-		/* Add red circle to top-left corner of both .front and .back */
 		.front::before, .back::before {
 			content: '';
 			position: absolute;
@@ -163,8 +210,8 @@
 			top: 80;
 		    left: 90;
 		    display: flex;
-		    flex-direction: row; /* Stack buttons vertically */
-		    gap: 10px; /* Space between buttons */
+		    flex-direction: row; 
+		    gap: 10px; 
 		}
 		
 		.checkbx {
@@ -316,39 +363,39 @@
 
     </style>
 <body>
+<div class="header" id="header">
 	<h2>Create Your Flashcards</h2>
-	
-	<div class="buttcontainer">
+    <div class="buttcontainer">
         <button class="delete-all-btn" id="deleteAllBtn">Delete All</button>
-		<button class="shuff-btn" onclick="shuffCard()">Shuffle</button>
-		<button class="save-btn" onclick="downloadFlashcards()">Save</button>
-	</div>		
-	<div class="upload">
-		<input type="file" id="uploadFile" />
-		<button class="dl" onclick="uploadFlashcards()">Upload</button>
-	</div>
+        <button class="shuff-btn" onclick="shuffCard()">Shuffle</button>
+        <button class="save-btn" onclick="downloadFlashcards()">Save</button>
+    </div>		
+    <div class="upload">
+        <input type="file" id="uploadFile" accept=".json" />
+        <button class="dl" onclick="uploadFlashcards()">Upload</button>
+    </div>
+    <div class="buttcontainersmall">
+        <div class="checkbx">
+            <label for="resetFlipToggle">Flip on shuffle</label>
+            <input type="checkbox" id="resetFlipToggle">
+        </div>
+        <button class="edit-btn" onclick="editCard()">Edit</button>
+        <button class="delete-btn" onclick="deleteCard()">Delete</button>
+    </div>
+	<span class="cardcount">Number of Flashcard: </span>
+	<button class="toggle-btn" id="toggleHeaderBtn" onclick="toggleHeader()">Hide ▲</button>
+</div>
 
-	<div class="container">
-	     <div class="buttcontainersmall">
-			<div class="checkbx">
-				<label for="resetFlipToggle">Flip on shuffle</label>
-				<input type="checkbox" id="resetFlipToggle">
-			</div>
-				<button class="edit-btn" onclick="editCard()">Edit</button>
-				<button class="delete-btn" onclick="deleteCard()">Delete</button>
-	    </div>
     <div class="flashcard-container" id="flashcardsList">
 		<button class="btn" onclick="openadd()"><img src="AddFlashcard.png"></button>
 	</div>
-			
 
-        <div id="actionButtons" style="margin-top: 20px;">
-    </div>
-</div>
+
 </html>
 <script>
     let modal;
 let selectedCard = null; 
+	let editModal;
 
 function openadd() {
     modal = document.createElement("div");
@@ -391,32 +438,34 @@ window.addEventListener("message", function (event) {
     }
 });
 
+// cardcount
+function updateFlashcardCount() {
+    const flashcardsList = document.getElementById("flashcardsList");
+    const flashcardCount = flashcardsList.querySelectorAll(".flashcard").length;
+    document.querySelector(".cardcount").textContent = `Total Number of Flashcards: ${flashcardCount}`;
+}
+
+// Flashcard Add Function
 function addFlashcard(frontText, backText) {
     const flashcardsList = document.getElementById("flashcardsList");
     const card = document.createElement("div");
     card.className = "flashcard";
+
     card.innerHTML = `
-        <div class="card-inner">
-            <div class="front">Q: ${frontText}</div>
-            <div class="back">A: ${backText}</div>
-        </div>`;
+    <div class="card-inner">
+        <div class="front">Q: ${frontText}</div>
+        <div class="back">A: ${backText}</div>
+    </div>`;
 
-    // Inside addFlashcard() function
-card.addEventListener('click', function () {
-    // Remove 'active-card' from all cards
-    document.querySelectorAll('.flashcard').forEach(c => c.classList.remove('active-card'));
-
-    // Add 'active-card' class to the clicked card (this will show the red circle)
-    card.classList.add('active-card');
-
-    // Flip the card
-    card.classList.toggle('flip'); 
-
-    // Store reference to selected card
-    selectedCard = card;
-});
+    card.addEventListener('click', function () {
+        document.querySelectorAll('.flashcard').forEach(c => c.classList.remove('active-card'));
+        card.classList.add('active-card');
+        card.classList.toggle('flip'); 
+        selectedCard = card;
+    });
 
     flashcardsList.appendChild(card);
+    updateFlashcardCount(); 
 }
 
 // EDIT FUNCTION
@@ -426,14 +475,55 @@ function editCard() {
         return;
     }
 
-    let frontText = prompt("Enter new front text:", selectedCard.querySelector(".front").textContent.replace("Q: ", ""));
-    let backText = prompt("Enter new back text:", selectedCard.querySelector(".back").textContent.replace("A: ", ""));
+    // Get the current front and back text of the selected card
+    const frontText = selectedCard.querySelector(".front").textContent.replace("Q: ", "");
+    const backText = selectedCard.querySelector(".back").textContent.replace("A: ", "");
 
-    if (frontText !== null && backText !== null) {
-        selectedCard.querySelector(".front").textContent = "Q: " + frontText;
-        selectedCard.querySelector(".back").textContent = "A: " + backText;
+    // Create the edit modal
+    editModal = document.createElement("div");
+    editModal.style.position = "fixed";
+    editModal.style.top = "0";
+    editModal.style.left = "0";
+    editModal.style.width = "100%";
+    editModal.style.height = "100%";
+    editModal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    editModal.style.display = "flex";
+    editModal.style.justifyContent = "center";
+    editModal.style.alignItems = "center";
+    editModal.style.zIndex = "1000";
+
+    const iframe = document.createElement("iframe");
+    iframe.src = `openedit.html?front=${encodeURIComponent(frontText)}&back=${encodeURIComponent(backText)}`;
+    iframe.style.width = "400px";
+    iframe.style.height = "450px";
+    iframe.style.border = "none";
+    iframe.style.borderRadius = "10px";
+    iframe.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.2)";
+
+    editModal.appendChild(iframe);
+    document.body.appendChild(editModal);
+}
+
+// Function to close the edit modal
+function closeEditModal() {
+    if (editModal) {
+        document.body.removeChild(editModal);
+        editModal = null;
     }
 }
+
+// Listen for messages from the iframe (when editing is completed)
+window.addEventListener("message", function (event) {
+    if (event.data.type === "editFlashcard") {
+        // Update the selected flashcard with the new values
+        selectedCard.querySelector(".front").textContent = "Q: " + event.data.front;
+        selectedCard.querySelector(".back").textContent = "A: " + event.data.back;
+
+        closeEditModal(); // Close the modal after editing
+    } else if (event.data.type === "closeModal") {
+        closeEditModal(); // Close the modal without changes
+    }
+});
 
 // DELETE FUNCTION
 function deleteCard() {
@@ -443,18 +533,20 @@ function deleteCard() {
     }
 
     selectedCard.remove();
-    selectedCard = null; // Clear selection after deletion
+    selectedCard = null;
+    updateFlashcardCount(); 
 }
 
+// DELETE ALL
 document.getElementById('deleteAllBtn').addEventListener('click', function () {
     const flashcardsList = document.getElementById("flashcardsList");
-
-    // Select all flashcards except the "Add Flashcard" button
     flashcardsList.querySelectorAll(".flashcard").forEach(card => card.remove());
-
-    selectedCard = null; // Clear selection after deletion
+    selectedCard = null;
+    updateFlashcardCount(); // Update count when all flashcards are deleted
 });
 
+// Call the function on page load to ensure correct count
+updateFlashcardCount();
 
 // SHUFFLE FUNCTION
 function shuffCard() {
@@ -466,24 +558,25 @@ function shuffCard() {
     cards.forEach(card => {
         card.classList.add("shuffle");
 
-        // If reset flip is enabled, flip cards back to the front
         if (resetFlip && card.classList.contains("flip")) {
             setTimeout(() => card.classList.remove("flip"), 150); // Delay flip reset slightly
         }
-
-        // Remove the 'active-card' class to hide the red circle
+		
         card.classList.remove("active-card");
 
         setTimeout(() => card.classList.remove("shuffle"), 300); // Remove animation after playing
     });
 
-    // Shuffle using Fisher-Yates algorithm
+    selectedCard = null;
+
+    // Shuffle (Fisher-Yates algorithm)
     setTimeout(() => {
         for (let i = cards.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             flashcardsList.appendChild(cards[j]); // Move shuffled card to end
         }
-    }, 300); // Delay shuffling until animation finishes
+    }, 300);
+	
 }
 
 // Download flashcard
@@ -495,11 +588,10 @@ function downloadFlashcards() {
         flashcards.push({ frontText, backText });
     });
 
-    // Create a Blob with the flashcard data and make it downloadable
     const blob = new Blob([JSON.stringify(flashcards)], { type: "application/json" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "flashcards.json"; // Set the filename for the download
+    link.download = "flashcards.json"; 
     link.click();
 }
 
@@ -536,10 +628,33 @@ function uploadFlashcards() {
 
             flashcardsList.appendChild(card);
         });
+
+        updateFlashcardCount(); // Update count after importing
     };
 
     reader.readAsText(file);
 }
+
+// header
+function toggleHeader() {
+    const header = document.getElementById("header");
+    const flashcardContainer = document.getElementById("flashcardsList");
+    const toggleBtn = document.getElementById("toggleHeaderBtn");
+
+    if (header.classList.contains("hidden-header")) {
+        // Show header and flashcard container
+        header.classList.remove("hidden-header");
+        flashcardContainer.style.marginTop = "260px"; // Restore original margin
+        toggleBtn.textContent = "Hide ▲";
+    } else {
+        // Hide header and move flashcard container up
+        header.classList.add("hidden-header");
+        flashcardContainer.style.marginTop = "50px"; // Move it closer to the top
+        toggleBtn.textContent = "Show ▼";
+    }
+}
+
+
 
 </script>
 
