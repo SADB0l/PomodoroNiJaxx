@@ -3,12 +3,13 @@
 <center>
 <style>
         body {
+			margin-top: 60px; /* Push content down to avoid overlap */
             font-family: 'Arial', sans-serif;
             background-color: #f0f4f8;
             margin: 0;
             padding: 20px;
             color: #333;
-			user-select: none; /* Text Select False */
+			user-select: none; 
 			-webkit-user-select: none;
 			-moz-user-select: none;
 			-ms-user-select: none;
@@ -24,14 +25,14 @@
 			position: fixed;
 			top: 0;
 			left: 0;
-			z-index: 1000;
+			z-index: 800;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			border-radius: 5px;
 			background-color: white;
 			padding: 15px;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 			width: 100%;
 			transition: transform 0.3s ease-in-out;
 		}
@@ -47,19 +48,29 @@
 			padding: 8px 15px;
 			border-radius: 5px;
 			transition: background 0.3s;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 			width: 100px;
 			margin: 0 auto;
 			display: block;
+			transition: transform 0.2s ease-in-out;
+		}
+		
+		.createFcardTitle {
+			position: absolute;
+			bottom: 5px;
+			left: 50px;
+			font-size: 15px;
+			font-weight: bold;
 		}
 		
 		.cardcount {
 			position: absolute;
 			bottom: 20px;
-			left: 50px;
+			right: 90px;
 			font-size: 15px;
 			font-weight: bold;
 		}
+		
 
         .container {
             display: flex;
@@ -67,12 +78,11 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
         }
 
         h1, h2 {
             text-align: center;
-            color: #4CAF50;
             width: 100%;
         }
 
@@ -82,12 +92,10 @@
 			justify-content: flex-start;
 			align-items: flex-start;
 			column-gap: 30px;
-			max-width: 1400px;
+			max-width: 90%;
 			margin: 260px auto 20px auto; 
-			background-color: #fff;
 			padding: 20px;
 			border-radius: 10px;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 			transition: transform 0.3s ease-in-out; 
 		}
 
@@ -102,11 +110,14 @@
 			align-items: center;
 			flex-shrink: 0; 
 			row-gap: 5px;
+			margin-bottom: 50px;
+			transition: transform 0.2s ease-in-out;
 		}
 
 
         .flashcard:hover {
             transform: scale(1.05);
+			z-index: 500;
         }
 
         .card-inner {
@@ -133,8 +144,13 @@
 			justify-content: center;
 			align-items: center;
 			font-size: 18px;
-			border-radius: 8px;
-			box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+			border-radius: 20px;
+			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+		}
+		
+		.front:hover, .back:hover {
+			border: 1px solid;
+			box-shadow: 0 5px 2px rgba(0, 0, 0, 0.1);
 		}
 
 		.front::before, .back::before {
@@ -146,18 +162,18 @@
 			height: 20px;
 			background-color: red;
 			border-radius: 50%;
-			display: none; /* Hidden by default */
-			z-index: 1; /* Ensure the circle stays on top of the card content */
+			display: none; 
+			z-index: 1; 
 		}
 
-		/* Show the red circle when the card is active */
+		/* Show Active */
 		.flashcard.active-card .front::before,
 		.flashcard.active-card .back::before {
 			display: block;
 		}
 
 		.front {
-			background-color: #f8f9fa;
+			background-color: #fff;
 			color: #333;
 			font-weight: bold;
 			padding: 20px;
@@ -184,7 +200,8 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+			box-shadow: 0 6px 2px rgba(0, 0, 0, 0.2);
+			transition: transform 0.3s ease-in-out;
 		}
 		
 		.btn img {
@@ -193,7 +210,9 @@
 		}
 
 		.btn:hover {
+			box-shadow: 0 8px 2px rgba(0, 0, 0, 0.2);
 			transform: scale(1.05);
+			z-index: 500;
 		}
 		
 		.buttcontainer {
@@ -223,7 +242,7 @@
 			padding: 5px 12px;
 			background: #ffffff;
 			border-radius: 8px;
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 			cursor: pointer;
 		}
 
@@ -248,7 +267,7 @@
 		}
 
 		.checkbx input:checked {
-			background: #4CAF50; /* Green when checked */
+			background: #4CAF50;
 		}
 
 		.checkbx input::before {
@@ -295,7 +314,8 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+			transition: transform 0.2s ease-in-out;
 		}
 		
 		.delete-all-btn, .save-btn, .shuff-btn {
@@ -312,11 +332,13 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+			transition: transform 0.2s ease-in-out;
 		}
 
-		.delete-all-btn:hover, .edit-btn:hover, .delete-btn:hover, .save-btn:hover, .shuff-btn:hover {
+		.delete-all-btn:hover, .edit-btn:hover, .delete-btn:hover, .save-btn:hover, .shuff-btn:hover, .toggle-btn:hover, .dl:hover {
 			transform: scale(1.10);
+			box-shadow: 0 5px 2px rgba(0, 0, 0, 0.2);
 		}
 
 		@keyframes shuffleAnimation {
@@ -343,7 +365,7 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 			height: 25px;
 		}
 		
@@ -358,7 +380,8 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+			transition: transform 0.2s ease-in-out;
 		}
 
     </style>
@@ -384,13 +407,13 @@
     </div>
 	<span class="cardcount">Number of Flashcard: </span>
 	<button class="toggle-btn" id="toggleHeaderBtn" onclick="toggleHeader()">Hide ▲</button>
+	<p class="createFcardTitle" id="createFcardTitle" hidden>Create Your Flashcards</p>
 </div>
 
     <div class="flashcard-container" id="flashcardsList">
 		<button class="btn" onclick="openadd()"><img src="AddFlashcard.png"></button>
 	</div>
-
-
+	
 </html>
 <script>
     let modal;
@@ -640,15 +663,18 @@ function toggleHeader() {
     const header = document.getElementById("header");
     const flashcardContainer = document.getElementById("flashcardsList");
     const toggleBtn = document.getElementById("toggleHeaderBtn");
+    const createFcardTitle = document.getElementById("createFcardTitle");
 
     if (header.classList.contains("hidden-header")) {
         header.classList.remove("hidden-header");
         flashcardContainer.style.transform = "translateY(0px)";  
         toggleBtn.textContent = "Hide ▲";
+        createFcardTitle.hidden = true;  
     } else {
         header.classList.add("hidden-header");
         flashcardContainer.style.transform = "translateY(-210px)"; 
         toggleBtn.textContent = "Show ▼";
+        createFcardTitle.hidden = false;  
     }
 }
 
