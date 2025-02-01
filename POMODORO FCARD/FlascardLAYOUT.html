@@ -57,7 +57,7 @@
 			position: absolute;
 			bottom: 20px;
 			left: 50px;
-			font-size: 12px;
+			font-size: 15px;
 			font-weight: bold;
 		}
 
@@ -83,11 +83,12 @@
 			align-items: flex-start;
 			column-gap: 30px;
 			max-width: 1400px;
-			margin: 260px auto 20px auto;
+			margin: 260px auto 20px auto; 
 			background-color: #fff;
 			padding: 20px;
 			border-radius: 10px;
 			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			transition: transform 0.3s ease-in-out; 
 		}
 
 		.flashcard {
@@ -234,7 +235,6 @@
 			cursor: pointer;
 		}
 
-		/* Style for checkbox toggle */
 		.checkbx input {
 			appearance: none;
 			width: 40px;
@@ -376,7 +376,7 @@
     </div>
     <div class="buttcontainersmall">
         <div class="checkbx">
-            <label for="resetFlipToggle">Flip on shuffle</label>
+            <label for="resetFlipToggle">Reset Flip on shuffle</label>
             <input type="checkbox" id="resetFlipToggle">
         </div>
         <button class="edit-btn" onclick="editCard()">Edit</button>
@@ -504,7 +504,6 @@ function editCard() {
     document.body.appendChild(editModal);
 }
 
-// Function to close the edit modal
 function closeEditModal() {
     if (editModal) {
         document.body.removeChild(editModal);
@@ -512,16 +511,14 @@ function closeEditModal() {
     }
 }
 
-// Listen for messages from the iframe (when editing is completed)
 window.addEventListener("message", function (event) {
     if (event.data.type === "editFlashcard") {
-        // Update the selected flashcard with the new values
         selectedCard.querySelector(".front").textContent = "Q: " + event.data.front;
         selectedCard.querySelector(".back").textContent = "A: " + event.data.back;
 
-        closeEditModal(); // Close the modal after editing
+        closeEditModal(); 
     } else if (event.data.type === "closeModal") {
-        closeEditModal(); // Close the modal without changes
+        closeEditModal(); 
     }
 });
 
@@ -542,29 +539,27 @@ document.getElementById('deleteAllBtn').addEventListener('click', function () {
     const flashcardsList = document.getElementById("flashcardsList");
     flashcardsList.querySelectorAll(".flashcard").forEach(card => card.remove());
     selectedCard = null;
-    updateFlashcardCount(); // Update count when all flashcards are deleted
+    updateFlashcardCount();
 });
 
-// Call the function on page load to ensure correct count
 updateFlashcardCount();
 
 // SHUFFLE FUNCTION
 function shuffCard() {
     let flashcardsList = document.getElementById("flashcardsList");
     let cards = Array.from(flashcardsList.getElementsByClassName("flashcard"));
-    let resetFlip = document.getElementById("resetFlipToggle").checked; // Check if toggle is on
+    let resetFlip = document.getElementById("resetFlipToggle").checked; 
 
-    // Apply shuffle animation to each card before reordering
     cards.forEach(card => {
         card.classList.add("shuffle");
 
         if (resetFlip && card.classList.contains("flip")) {
-            setTimeout(() => card.classList.remove("flip"), 150); // Delay flip reset slightly
+            setTimeout(() => card.classList.remove("flip"), 150); 
         }
 		
         card.classList.remove("active-card");
 
-        setTimeout(() => card.classList.remove("shuffle"), 300); // Remove animation after playing
+        setTimeout(() => card.classList.remove("shuffle"), 300); 
     });
 
     selectedCard = null;
@@ -573,7 +568,7 @@ function shuffCard() {
     setTimeout(() => {
         for (let i = cards.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
-            flashcardsList.appendChild(cards[j]); // Move shuffled card to end
+            flashcardsList.appendChild(cards[j]); 
         }
     }, 300);
 	
@@ -588,11 +583,16 @@ function downloadFlashcards() {
         flashcards.push({ frontText, backText });
     });
 
-    const blob = new Blob([JSON.stringify(flashcards)], { type: "application/json" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "flashcards.json"; 
-    link.click();
+    const fileName = prompt("Enter a name for your flashcards:", "flashcards"); 
+    if (fileName !== null && fileName.trim() !== "") { 
+        const blob = new Blob([JSON.stringify(flashcards)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${fileName.trim()}.json`; 
+        link.click();
+    } else {
+        alert("Download canceled. No file name provided."); 
+    }
 }
 
 // Function to upload flashcards from a file
@@ -642,14 +642,12 @@ function toggleHeader() {
     const toggleBtn = document.getElementById("toggleHeaderBtn");
 
     if (header.classList.contains("hidden-header")) {
-        // Show header and flashcard container
         header.classList.remove("hidden-header");
-        flashcardContainer.style.marginTop = "260px"; // Restore original margin
+        flashcardContainer.style.transform = "translateY(0px)";  
         toggleBtn.textContent = "Hide ▲";
     } else {
-        // Hide header and move flashcard container up
         header.classList.add("hidden-header");
-        flashcardContainer.style.marginTop = "50px"; // Move it closer to the top
+        flashcardContainer.style.transform = "translateY(-210px)"; 
         toggleBtn.textContent = "Show ▼";
     }
 }
